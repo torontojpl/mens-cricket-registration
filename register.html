@@ -418,7 +418,7 @@
 
 <script>
 // ── CONFIG ─────────────────────────────────────────
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz91_GZaQsE2FtL93puLoVnEl8yRlx-AwtpDZjYjuMre--BLX32fUXBz_FdX9aSz0f-tw/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
 // ───────────────────────────────────────────────────
 
 var photoBase64="", photoMime="", photoName="";
@@ -621,21 +621,71 @@ function buildReview(){
   else rs.classList.remove("show");
 }
 
-// ── SUBMIT ───────────────────────────────────────────
+// ── SUBMIT — hidden iframe method (no CORS issues) ───
 function submitForm(){
-  var spinner=document.getElementById("spinner");
-  var btn=document.getElementById("submitBtn");
+  var spinner = document.getElementById("spinner");
+  var btn     = document.getElementById("submitBtn");
   captureSignature();
-  spinner.classList.add("show"); btn.disabled=true;
-  var fd=new FormData(document.getElementById("regForm"));
-  if(photoBase64){fd.append("photo_base64",photoBase64);fd.append("photo_mime",photoMime);fd.append("photo_name",photoName);}
-  if(sigBase64){fd.append("signature_base64",sigBase64);}
-  fetch(SCRIPT_URL,{method:"POST",body:fd,mode:"no-cors"})
-  .then(function(){
-    var name=(document.querySelector("[name='first_name']")||{}).value||"";
-    window.location.href="thankyou.html?name="+encodeURIComponent(name);
-  })
-  .catch(function(err){spinner.classList.remove("show");btn.disabled=false;alert("Something went wrong. Please try again.");console.error(err);});
+
+  // Build a plain object of all values
+  var form    = document.getElementById("regForm");
+  var data    = {};
+  var fd      = new FormData(form);
+  fd.forEach(function(v,k){ data[k] = v; });
+
+  // Multi-value fields (checkboxes) — collect as comma string
+  var positions    = Array.from(form.querySelectorAll("input[name='position[]']:checked")).map(function(c){return c.value;}).join(", ");
+  var availability = Array.from(form.querySelectorAll("input[name='availability[]']:checked")).map(function(c){return c.value;}).join(", ");
+  if(positions)    data["position[]"]     = positions;
+  if(availability) data["availability[]"] = availability;
+
+  // Photo + signature
+  if(photoBase64){ data["photo_base64"]=photoBase64; data["photo_mime"]=photoMime; data["photo_name"]=photoName; }
+  if(sigBase64)  { data["signature_base64"]=sigBase64; }
+
+  // Consent booleans (checkboxes may not appear in FormData if unchecked — force them)
+  ["consent_player","consent_guardian","consent_medical","consent_media"].forEach(function(k){
+    data[k] = document.getElementById(k).checked ? "on" : "";
+  });
+
+  spinner.classList.add("show");
+  btn.disabled = true;
+
+  // Build a hidden form and submit it — most reliable cross-origin method
+  // Apps Script returns a redirect which the iframe absorbs; we redirect after a safe timeout
+  var iframe = document.createElement("iframe");
+  iframe.name   = "hidden_submit";
+  iframe.style.cssText = "display:none;width:0;height:0;border:0";
+  document.body.appendChild(iframe);
+
+  var hiddenForm = document.createElement("form");
+  hiddenForm.method  = "POST";
+  hiddenForm.action  = SCRIPT_URL;
+  hiddenForm.target  = "hidden_submit";
+  hiddenForm.enctype = "application/x-www-form-urlencoded";
+
+  Object.keys(data).forEach(function(k){
+    var input   = document.createElement("input");
+    input.type  = "hidden";
+    input.name  = k;
+    input.value = data[k] || "";
+    hiddenForm.appendChild(input);
+  });
+
+  document.body.appendChild(hiddenForm);
+  hiddenForm.submit();
+
+  // After 4 seconds the Apps Script will have processed — redirect to thankyou
+  var playerName = (form.querySelector("[name='first_name']")||{}).value || "";
+  setTimeout(function(){
+    window.location.href = "thankyou.html?name=" + encodeURIComponent(playerName);
+  }, 4000);
+
+  // Safety fallback — if iframe fires a load event earlier, redirect immediately
+  iframe.onload = function(){
+    clearTimeout(window._submitTimer);
+    window.location.href = "thankyou.html?name=" + encodeURIComponent(playerName);
+  };
 }
 
 // Live clear errors
