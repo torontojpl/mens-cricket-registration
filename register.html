@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cricket Player Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#1b6b3a;--green-d:#0d4424;--green-m:#259250;--green-l:#eaf6ef;
+      --gold:#d4a017;--gold-l:#fdf7e3;
+      --text:#111;--muted:#5a5a5a;--border:#dde3e8;--bg:#f4f6f4;--white:#fff;
+      --step-w:640px;
+    }
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    /* TOP BAR */
+    .topbar{background:var(--green-d);padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+    .brand{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:white}
+    .brand span{color:var(--gold)}
+    .step-lbl{font-size:13px;color:rgba(255,255,255,.55);font-weight:500}
+    .step-lbl strong{color:white}
+
+    /* DOTS */
+    .dots-wrap{background:var(--green-d);padding:0 32px 20px}
+    .dots{display:flex;align-items:center;max-width:var(--step-w);margin:0 auto}
+    .di{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative}
+    .di:not(:last-child)::after{content:'';position:absolute;top:14px;left:calc(50% + 14px);right:calc(-50% + 14px);height:2px;background:rgba(255,255,255,.15);transition:background .4s}
+    .di.done:not(:last-child)::after{background:var(--green-m)}
+    .dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.4);background:transparent;transition:all .3s;position:relative;z-index:1}
+    .di.active .dot{background:var(--gold);border-color:var(--gold);color:var(--green-d)}
+    .di.done .dot{background:var(--green-m);border-color:var(--green-m);color:white;font-size:0}
+    .di.done .dot::after{content:'';width:10px;height:6px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px);display:block}
+    .dlbl{font-size:10px;color:rgba(255,255,255,.35);font-weight:500;text-align:center;transition:color .3s;white-space:nowrap}
+    .di.active .dlbl{color:rgba(255,255,255,.9)}
+    .di.done  .dlbl{color:rgba(255,255,255,.6)}
+
+    /* CARD */
+    .wizard-wrap{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px 60px}
+    .wizard-card{width:100%;max-width:var(--step-w);background:var(--white);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.09);overflow:hidden}
+
+    /* PANELS */
+    .panel{display:none}
+    .panel.active{display:block;animation:slideIn .28s ease both}
+    .panel.active.back{animation:slideBack .28s ease both}
+    @keyframes slideIn  {from{opacity:0;transform:translateX(24px)} to{opacity:1;transform:none}}
+    @keyframes slideBack{from{opacity:0;transform:translateX(-24px)} to{opacity:1;transform:none}}
+
+    .ph{padding:32px 40px 0}
+    .eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--green-m);margin-bottom:6px}
+    .ptitle{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1.15;margin-bottom:6px}
+    .ptitle span{color:var(--green)}
+    .psub{font-size:14px;color:var(--muted);line-height:1.55}
+    .pb{padding:28px 40px}
+    .pnav{padding:0 40px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+
+    @media(max-width:560px){.ph{padding:24px 20px 0}.pb{padding:20px}.pnav{padding:0 20px 24px}.ptitle{font-size:22px}.dlbl{display:none}}
+
+    /* FIELDS */
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .full{grid-column:1/-1}
+    @media(max-width:500px){.g2{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase}
+    .req{color:#c0392b;margin-left:2px}
+    input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],select,textarea{
+      width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;
+      font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);background:var(--white);
+      transition:border-color .2s,box-shadow .2s;appearance:none;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(27,107,58,.1)}
+    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+    textarea{resize:vertical;min-height:80px}
+    .err{font-size:12px;color:#c0392b;display:none}
+    .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#c0392b}
+    .field.invalid .err{display:block}
+
+    /* CHIPS */
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+    .chips label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer;padding:8px 16px;border:1.5px solid var(--border);border-radius:50px;transition:all .18s;user-select:none;background:var(--white)}
+    .chips label:has(input:checked){border-color:var(--green);background:var(--green-l);color:var(--green-d);font-weight:600}
+    .chips input{display:none}
+
+    /* PHOTO */
+    .photo-zone{border:2px dashed var(--border);border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:#fafafa}
+    .photo-zone:hover,.photo-zone.over{border-color:var(--green);background:var(--green-l)}
+    .photo-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .up-circle{width:56px;height:56px;border-radius:50%;background:var(--green-l);margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+    .up-circle svg{width:24px;height:24px}
+    .up-hint{font-size:14px;color:var(--muted);line-height:1.55}
+    .up-hint strong{color:var(--green)}
+    .photo-prev{display:none;align-items:center;gap:16px;margin-top:16px;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;background:#fafafa}
+    .photo-prev.show{display:flex}
+    #photoPreview{width:72px;height:88px;object-fit:cover;border-radius:8px;border:2px solid var(--border);flex-shrink:0}
+    .prev-meta{flex:1;min-width:0}
+    .prev-meta .fn{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .prev-meta .fs{font-size:12px;color:var(--muted);margin-top:2px}
+    .btn-rm{background:none;border:1.5px solid #e74c3c;color:#e74c3c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;flex-shrink:0}
+    .btn-rm:hover{background:#e74c3c;color:white}
+    .photo-err{font-size:12px;color:#c0392b;margin-top:6px;display:none}
+    .photo-err.show{display:block}
+
+    /* ── CONSENT STATEMENTS ── */
+    .consent-statements{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+    .consent-item{
+      background:#fafafa;border:1.5px solid var(--border);border-radius:12px;
+      padding:16px 18px;display:flex;gap:14px;align-items:flex-start;
+      transition:border-color .2s,background .2s;cursor:pointer;
+    }
+    .consent-item:has(input:checked){border-color:var(--green);background:var(--green-l)}
+    .consent-item input[type=checkbox]{width:18px;height:18px;margin-top:2px;accent-color:var(--green);flex-shrink:0;cursor:pointer}
+    .consent-item-body{}
+    .consent-item-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+    .consent-item:has(input:checked) .consent-item-title{color:var(--green-d)}
+    .consent-item-text{font-size:13px;color:var(--muted);line-height:1.6}
+    .consent-required{font-size:11px;color:#c0392b;font-weight:600;margin-top:3px;display:none}
+    .consent-item.invalid{border-color:#c0392b;background:#fff8f8}
+    .consent-item.invalid .consent-required{display:block}
+
+    /* ── SIGNATURE PAD ── */
+    .sig-wrap{margin-top:28px}
+    .sig-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.3px;text-transform:uppercase;margin-bottom:8px}
+    .sig-label .req{color:#c0392b;margin-left:2px}
+    .sig-container{
+      border:2px solid var(--border);border-radius:12px;
+      background:white;position:relative;overflow:hidden;
+      transition:border-color .2s;
+    }
+    .sig-container.active{border-color:var(--green)}
+    .sig-container.invalid{border-color:#c0392b}
+    #sigCanvas{
+      display:block;width:100%;height:180px;
+      cursor:crosshair;touch-action:none;
+    }
+    .sig-watermark{
+      position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+      font-size:11px;color:rgba(0,0,0,.12);pointer-events:none;white-space:nowrap;
+      font-family:'DM Sans',sans-serif;
+    }
+    .sig-line{
+      position:absolute;bottom:36px;left:32px;right:32px;
+      border-bottom:1.5px dashed rgba(0,0,0,.12);pointer-events:none;
+    }
+    .sig-x{
+      position:absolute;bottom:38px;left:32px;
+      font-size:18px;color:rgba(0,0,0,.2);pointer-events:none;line-height:1;
+    }
+    .sig-actions{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--border);background:#fafafa}
+    .sig-hint{font-size:12px;color:var(--muted)}
+    .sig-hint.signed{color:var(--green);font-weight:600}
+    .btn-clear{background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+    .btn-clear:hover{border-color:#e74c3c;color:#e74c3c}
+    .sig-err{font-size:12px;color:#c0392b;margin-top:6px;display:none}
+    .sig-err.show{display:block}
+
+    /* REVIEW */
+    .rv-section{margin-bottom:22px}
+    .rv-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--green-m);border-bottom:1.5px solid var(--green-l);padding-bottom:6px;margin-bottom:12px}
+    .rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+    @media(max-width:500px){.rv-grid{grid-template-columns:1fr}}
+    .rv-field label{font-size:11px;color:#aaa;font-weight:600;letter-spacing:.3px;text-transform:uppercase;display:block;margin-bottom:2px}
+    .rv-field span{font-size:14px;color:var(--text);font-weight:500}
+    .chip-sm{display:inline-block;background:var(--green-l);color:var(--green-d);border:1px solid #9fe1cb;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:600;margin:2px 2px 0 0}
+    #reviewPhoto{width:80px;height:96px;object-fit:cover;border-radius:10px;border:2px solid var(--border);display:none;flex-shrink:0}
+    #reviewPhoto.show{display:block}
+    #reviewSig{max-width:220px;height:60px;object-fit:contain;border:1px solid var(--border);border-radius:8px;background:white;display:none;margin-top:6px}
+    #reviewSig.show{display:block}
+
+    /* BUTTONS */
+    .btn-back{background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:10px;padding:12px 24px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s}
+    .btn-back:hover{border-color:var(--green);color:var(--green)}
+    .btn-back:disabled{opacity:.3;pointer-events:none}
+    .btn-next{flex:1;background:var(--green);color:white;border:none;border-radius:10px;padding:13px 24px;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:.3px;cursor:pointer;transition:background .18s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-next:hover{background:var(--green-d)}
+    .btn-next:active{transform:scale(.98)}
+    .btn-next:disabled{background:#aaa;cursor:not-allowed}
+    .btn-next svg{width:18px;height:18px;flex-shrink:0}
+
+    /* SPINNER */
+    #spinner{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px}
+    #spinner.show{display:flex}
+    .spin-ring{width:48px;height:48px;border:4px solid var(--green-l);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #spinner p{color:var(--green-d);font-weight:600;font-size:15px}
+    #spinner small{color:var(--muted);font-size:12px;margin-top:-6px}
+  </style>
+</head>
+<body>
+
+<div id="spinner">
+  <div class="spin-ring"></div>
+  <p>Submitting your registration…</p>
+  <small>Saving signature, uploading photo &amp; generating PDF — please wait</small>
+</div>
+
+<div class="topbar">
+  <div class="brand">Cricket<span>Club</span></div>
+  <div class="step-lbl">Step <strong id="topNum">1</strong> of 6</div>
+</div>
+
+<div class="dots-wrap">
+  <div class="dots">
+    <div class="di active" id="dot-0"><div class="dot">1</div><div class="dlbl">Personal</div></div>
+    <div class="di"        id="dot-1"><div class="dot">2</div><div class="dlbl">Photo</div></div>
+    <div class="di"        id="dot-2"><div class="dot">3</div><div class="dlbl">Cricket</div></div>
+    <div class="di"        id="dot-3"><div class="dot">4</div><div class="dlbl">Schedule</div></div>
+    <div class="di"        id="dot-4"><div class="dot">5</div><div class="dlbl">Consent</div></div>
+    <div class="di"        id="dot-5"><div class="dot">6</div><div class="dlbl">Review</div></div>
+  </div>
+</div>
+
+<div class="wizard-wrap"><div class="wizard-card"><form id="regForm" novalidate>
+
+  <!-- ══ STEP 1 — Personal ══ -->
+  <div class="panel active" data-step="0">
+    <div class="ph"><div class="eyebrow">Step 1 of 6</div><div class="ptitle">Tell us about <span>yourself</span></div><div class="psub">Personal and contact details.</div></div>
+    <div class="pb">
+      <div class="g2">
+        <div class="field" id="f-fn"><label>First name<span class="req">*</span></label><input type="text" name="first_name" placeholder="e.g. Virat" autocomplete="given-name"/><span class="err">Required</span></div>
+        <div class="field" id="f-ln"><label>Last name<span class="req">*</span></label><input type="text" name="last_name" placeholder="e.g. Kohli" autocomplete="family-name"/><span class="err">Required</span></div>
+        <div class="field" id="f-dob"><label>Date of birth<span class="req">*</span></label><input type="date" name="dob"/><span class="err">Required</span></div>
+        <div class="field"><label>Gender</label><select name="gender"><option value="">Select…</option><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select></div>
+        <div class="field" id="f-em"><label>Email<span class="req">*</span></label><input type="email" name="email" placeholder="you@example.com" autocomplete="email"/><span class="err">Valid email required</span></div>
+        <div class="field" id="f-ph"><label>Phone<span class="req">*</span></label><input type="tel" name="phone" placeholder="+1 416 000 0000" autocomplete="tel"/><span class="err">Required</span></div>
+        <div class="field full"><label>Home address</label><input type="text" name="address" placeholder="Street, City, Province" autocomplete="street-address"/></div>
+        <div class="field"><label>Emergency contact name</label><input type="text" name="emergency_name" placeholder="Full name"/></div>
+        <div class="field"><label>Emergency contact phone</label><input type="tel" name="emergency_phone" placeholder="+1 416 000 0000"/></div>
+      </div>
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" disabled>Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(0)">Next — Photo <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2 — Photo ══ -->
+  <div class="panel" data-step="1">
+    <div class="ph"><div class="eyebrow">Step 2 of 6</div><div class="ptitle">Your <span>photo</span></div><div class="psub">Optional but recommended. JPG/PNG, max 4 MB.</div></div>
+    <div class="pb">
+      <div class="photo-zone" id="uploadArea">
+        <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp"/>
+        <div class="up-circle"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#1b6b3a" stroke-width="1.5"/><path d="M12 16V8M8 12l4-4 4 4" stroke="#1b6b3a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <p class="up-hint"><strong>Click to upload</strong> or drag &amp; drop<br>JPG, PNG or WebP — max 4 MB</p>
+      </div>
+      <p class="photo-err" id="photoErr"></p>
+      <div class="photo-prev" id="photoPrev">
+        <img id="photoPreview" src="" alt="Preview"/>
+        <div class="prev-meta"><div class="fn" id="photoFn"></div><div class="fs" id="photoFs"></div></div>
+        <button type="button" class="btn-rm" id="removePhoto">Remove</button>
+      </div>
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" onclick="prevStep(1)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(1)">Next — Cricket profile <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3 — Cricket ══ -->
+  <div class="panel" data-step="2">
+    <div class="ph"><div class="eyebrow">Step 3 of 6</div><div class="ptitle">Your <span>cricket profile</span></div><div class="psub">How do you play?</div></div>
+    <div class="pb">
+      <div class="g2">
+        <div class="field"><label>Batting style</label><select name="batting_style"><option value="">Select…</option><option>Right-hand bat</option><option>Left-hand bat</option></select></div>
+        <div class="field"><label>Bowling style</label><select name="bowling_style"><option value="">Select…</option><option>Right-arm fast</option><option>Right-arm medium</option><option>Right-arm off-spin</option><option>Right-arm leg-spin</option><option>Left-arm fast</option><option>Left-arm medium</option><option>Left-arm orthodox</option><option>Left-arm chinaman</option><option>Does not bowl</option></select></div>
+        <div class="field full"><label>Preferred positions</label><div class="chips"><label><input type="checkbox" name="position[]" value="Opener"/> Opener</label><label><input type="checkbox" name="position[]" value="Top order"/> Top order</label><label><input type="checkbox" name="position[]" value="Middle order"/> Middle order</label><label><input type="checkbox" name="position[]" value="All-rounder"/> All-rounder</label><label><input type="checkbox" name="position[]" value="Wicket-keeper"/> Wicket-keeper</label><label><input type="checkbox" name="position[]" value="Bowler"/> Bowler</label></div></div>
+        <div class="field full"><label>Experience level<span class="req">*</span></label><div class="chips"><label><input type="radio" name="experience" value="Beginner"/> Beginner</label><label><input type="radio" name="experience" value="Recreational"/> Recreational</label><label><input type="radio" name="experience" value="Club level"/> Club level</label><label><input type="radio" name="experience" value="District / State"/> District / State</label></div><span class="err" id="exp-err" style="display:none">Please select experience level</span></div>
+        <div class="field"><label>Years playing</label><input type="number" name="years_playing" min="0" max="50" placeholder="e.g. 5"/></div>
+        <div class="field"><label>Shirt number</label><input type="number" name="shirt_number" min="1" max="99" placeholder="1–99"/></div>
+        <div class="field full"><label>Previous clubs / teams</label><textarea name="previous_clubs" placeholder="Any clubs or teams you've played for…"></textarea></div>
+      </div>
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(2)">Next — Availability <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 4 — Availability ══ -->
+  <div class="panel" data-step="3">
+    <div class="ph"><div class="eyebrow">Step 4 of 6</div><div class="ptitle">Your <span>availability</span></div><div class="psub">When can you play? Select all that apply.</div></div>
+    <div class="pb">
+      <div class="field" style="margin-bottom:22px"><label>Available to play on</label><div class="chips" style="margin-top:8px"><label><input type="checkbox" name="availability[]" value="Weekday evenings"/> Weekday evenings</label><label><input type="checkbox" name="availability[]" value="Saturday"/> Saturdays</label><label><input type="checkbox" name="availability[]" value="Sunday"/> Sundays</label><label><input type="checkbox" name="availability[]" value="Both weekends"/> Both weekends</label></div></div>
+      <div class="field"><label>Additional notes</label><textarea name="notes" placeholder="Injuries, medical conditions, anything else we should know…" style="min-height:110px"></textarea></div>
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(3)">Next — Consent &amp; signature <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 5 — Consent & Signature ══ -->
+  <div class="panel" data-step="4">
+    <div class="ph"><div class="eyebrow">Step 5 of 6</div><div class="ptitle">Consent &amp; <span>signature</span></div><div class="psub">Please read and agree to each statement, then sign below.</div></div>
+    <div class="pb">
+
+      <div class="consent-statements">
+
+        <!-- 1. Player consent -->
+        <div class="consent-item" id="ci-player">
+          <input type="checkbox" name="consent_player" id="consent_player"/>
+          <div class="consent-item-body">
+            <div class="consent-item-title">Player consent &amp; code of conduct <span class="req">*</span></div>
+            <div class="consent-item-text">I agree to abide by the club's code of conduct, respect fellow players, officials and opponents, and understand that misconduct may result in suspension or removal from the club.</div>
+            <div class="consent-required">This consent is required</div>
+          </div>
+        </div>
+
+        <!-- 2. Parent/guardian -->
+        <div class="consent-item" id="ci-guardian">
+          <input type="checkbox" name="consent_guardian" id="consent_guardian"/>
+          <div class="consent-item-body">
+            <div class="consent-item-title">Parent / guardian consent (if player is under 18) <span class="req">*</span></div>
+            <div class="consent-item-text">I confirm I am the parent or legal guardian of this player and give my consent for them to participate in all club activities, training sessions and matches. If the player is 18 or over, tick to confirm this is not applicable.</div>
+            <div class="consent-required">This consent is required</div>
+          </div>
+        </div>
+
+        <!-- 3. Medical -->
+        <div class="consent-item" id="ci-medical">
+          <input type="checkbox" name="consent_medical" id="consent_medical"/>
+          <div class="consent-item-body">
+            <div class="consent-item-title">Medical disclosure consent <span class="req">*</span></div>
+            <div class="consent-item-text">I confirm that the player is medically fit to participate in cricket activities. I consent to emergency medical treatment being sought if required, and understand the club is not liable for injuries sustained during play.</div>
+            <div class="consent-required">This consent is required</div>
+          </div>
+        </div>
+
+        <!-- 4. Photo/media -->
+        <div class="consent-item" id="ci-media">
+          <input type="checkbox" name="consent_media" id="consent_media"/>
+          <div class="consent-item-body">
+            <div class="consent-item-title">Photo &amp; media usage consent <span class="req">*</span></div>
+            <div class="consent-item-text">I consent to photographs and videos taken during club activities being used for club publications, website, and social media. Images will not be shared with third parties or used commercially.</div>
+            <div class="consent-required">This consent is required</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Signature pad -->
+      <div class="sig-wrap">
+        <div class="sig-label">Signature <span class="req">*</span></div>
+        <div class="sig-container" id="sigContainer">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-line"></div>
+          <div class="sig-x">✕</div>
+          <div class="sig-watermark">Sign above this line</div>
+          <div class="sig-actions">
+            <span class="sig-hint" id="sigHint">Draw your signature above using mouse or finger</span>
+            <button type="button" class="btn-clear" id="sigClear">Clear</button>
+          </div>
+        </div>
+        <span class="sig-err" id="sigErr">Please provide your signature to continue</span>
+      </div>
+
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(4)">Review &amp; submit <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 6 — Review ══ -->
+  <div class="panel" data-step="5">
+    <div class="ph"><div class="eyebrow">Step 6 of 6</div><div class="ptitle">Review your <span>registration</span></div><div class="psub">Check everything before we send your PDF.</div></div>
+    <div class="pb">
+
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:22px">
+        <img id="reviewPhoto" src="" alt=""/>
+        <div style="flex:1">
+          <div class="rv-title">Personal</div>
+          <div class="rv-grid">
+            <div class="rv-field"><label>Full name</label><span id="rv-name">—</span></div>
+            <div class="rv-field"><label>Date of birth</label><span id="rv-dob">—</span></div>
+            <div class="rv-field"><label>Email</label><span id="rv-email">—</span></div>
+            <div class="rv-field"><label>Phone</label><span id="rv-phone">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv-section">
+        <div class="rv-title">Cricket profile</div>
+        <div class="rv-grid">
+          <div class="rv-field"><label>Batting</label><span id="rv-bat">—</span></div>
+          <div class="rv-field"><label>Bowling</label><span id="rv-bowl">—</span></div>
+          <div class="rv-field"><label>Experience</label><span id="rv-exp">—</span></div>
+          <div class="rv-field"><label>Years playing</label><span id="rv-yrs">—</span></div>
+        </div>
+        <div class="rv-field" style="margin-top:10px"><label>Positions</label><div id="rv-pos">—</div></div>
+      </div>
+
+      <div class="rv-section">
+        <div class="rv-title">Availability</div>
+        <div id="rv-avail">—</div>
+      </div>
+
+      <div class="rv-section">
+        <div class="rv-title">Consents agreed</div>
+        <div id="rv-consents">—</div>
+      </div>
+
+      <div class="rv-section">
+        <div class="rv-title">Signature</div>
+        <img id="reviewSig" src="" alt="Signature"/>
+      </div>
+
+      <div style="background:#f0faf4;border:1.5px solid #9fe1cb;border-radius:10px;padding:14px 16px;font-size:13px;color:#1b6b3a;font-weight:500">
+        By submitting you'll receive a signed PDF registration card by email.
+      </div>
+    </div>
+    <div class="pnav">
+      <button type="button" class="btn-back" onclick="prevStep(5)">Back</button>
+      <button type="button" class="btn-next" id="submitBtn" onclick="submitForm()">Submit registration <svg viewBox="0 0 18 18" fill="none"><path d="M3 9l5 5L15 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+</form></div></div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────
+var SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+// ───────────────────────────────────────────────────
+
+var photoBase64="", photoMime="", photoName="";
+var sigBase64="";
+var sigHasMark=false;
+
+// ── NAVIGATION ──────────────────────────────────────
+function showStep(idx,back){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active","back")});
+  var p=document.querySelector("[data-step='"+idx+"']");
+  p.classList.add("active"); if(back) p.classList.add("back");
+  document.querySelectorAll(".di").forEach(function(d,i){
+    d.classList.remove("active","done");
+    if(i<idx) d.classList.add("done");
+    if(i===idx) d.classList.add("active");
+  });
+  document.getElementById("topNum").textContent=idx+1;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(idx===5) buildReview();
+  if(idx===4) resizeCanvas();
+}
+function nextStep(from){if(validateStep(from)) showStep(from+1,false)}
+function prevStep(from){showStep(from-1,true)}
+
+// ── VALIDATION ──────────────────────────────────────
+function validateStep(s){
+  var ok=true;
+  if(s===0){
+    [["f-fn","first_name"],["f-ln","last_name"],["f-dob","dob"],["f-ph","phone"]].forEach(function(r){
+      var f=document.getElementById(r[0]);
+      if(!document.querySelector("[name='"+r[1]+"']").value.trim()){f.classList.add("invalid");ok=false;}
+      else f.classList.remove("invalid");
+    });
+    var ef=document.getElementById("f-em"),ev=document.querySelector("[name='email']").value.trim();
+    if(!ev||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ev)){ef.classList.add("invalid");ok=false;}
+    else ef.classList.remove("invalid");
+  }
+  if(s===2){
+    var ee=document.getElementById("exp-err");
+    if(!document.querySelector("input[name='experience']:checked")){ee.style.display="block";ok=false;}
+    else ee.style.display="none";
+  }
+  if(s===4){
+    // All 4 consents required
+    ["ci-player","ci-guardian","ci-medical","ci-media"].forEach(function(id){
+      var ci=document.getElementById(id);
+      var cb=ci.querySelector("input[type=checkbox]");
+      if(!cb.checked){ci.classList.add("invalid");ok=false;}
+      else ci.classList.remove("invalid");
+    });
+    // Signature required
+    var se=document.getElementById("sigErr");
+    captureSignature();
+    if(!sigHasMark){se.classList.add("show");document.getElementById("sigContainer").classList.add("invalid");ok=false;}
+    else{se.classList.remove("show");document.getElementById("sigContainer").classList.remove("invalid");}
+  }
+  if(!ok){
+    var f=document.querySelector(".invalid,.consent-item.invalid");
+    if(f) f.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  return ok;
+}
+
+// ── PHOTO ────────────────────────────────────────────
+var photoInput=document.getElementById("photoInput");
+var uploadArea=document.getElementById("uploadArea");
+var photoPrev=document.getElementById("photoPrev");
+var photoErr=document.getElementById("photoErr");
+photoInput.addEventListener("change",function(){handleFile(this.files[0])});
+uploadArea.addEventListener("dragover",function(e){e.preventDefault();uploadArea.classList.add("over")});
+uploadArea.addEventListener("dragleave",function(){uploadArea.classList.remove("over")});
+uploadArea.addEventListener("drop",function(e){e.preventDefault();uploadArea.classList.remove("over");handleFile(e.dataTransfer.files[0])});
+document.getElementById("removePhoto").addEventListener("click",clearPhoto);
+function handleFile(f){
+  if(!f) return;
+  if(!["image/jpeg","image/png","image/webp"].includes(f.type)){showPErr("Please upload a JPG, PNG or WebP.");return;}
+  if(f.size>4*1024*1024){showPErr("Max 4 MB (yours is "+(f.size/1024/1024).toFixed(1)+" MB).");return;}
+  hidePErr(); photoName=f.name; photoMime=f.type;
+  var r=new FileReader();
+  r.onload=function(ev){
+    photoBase64=ev.target.result.split(",")[1];
+    document.getElementById("photoPreview").src=ev.target.result;
+    document.getElementById("photoFn").textContent=f.name;
+    document.getElementById("photoFs").textContent=(f.size/1024).toFixed(0)+" KB";
+    photoPrev.classList.add("show"); uploadArea.style.display="none";
+  };
+  r.readAsDataURL(f);
+}
+function clearPhoto(){photoBase64="";photoMime="";photoName="";photoInput.value="";document.getElementById("photoPreview").src="";photoPrev.classList.remove("show");uploadArea.style.display="";hidePErr()}
+function showPErr(m){photoErr.textContent=m;photoErr.classList.add("show")}
+function hidePErr(){photoErr.classList.remove("show")}
+
+// ── SIGNATURE PAD ────────────────────────────────────
+var canvas=document.getElementById("sigCanvas");
+var ctx=canvas.getContext("2d");
+var drawing=false;
+var lastX=0,lastY=0;
+
+function resizeCanvas(){
+  var ratio=window.devicePixelRatio||1;
+  var w=canvas.offsetWidth;
+  var h=180;
+  canvas.width=w*ratio;
+  canvas.height=h*ratio;
+  canvas.style.height=h+"px";
+  ctx.scale(ratio,ratio);
+  ctx.lineWidth=2.2;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+  ctx.strokeStyle="#111";
+}
+
+function getPos(e){
+  var rect=canvas.getBoundingClientRect();
+  var ratio=window.devicePixelRatio||1;
+  if(e.touches){
+    return{x:e.touches[0].clientX-rect.left, y:e.touches[0].clientY-rect.top};
+  }
+  return{x:e.clientX-rect.left, y:e.clientY-rect.top};
+}
+
+canvas.addEventListener("mousedown",function(e){
+  drawing=true;
+  var p=getPos(e); lastX=p.x; lastY=p.y;
+  document.getElementById("sigContainer").classList.add("active");
+});
+canvas.addEventListener("mousemove",function(e){
+  if(!drawing) return;
+  var p=getPos(e);
+  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke();
+  lastX=p.x; lastY=p.y; sigHasMark=true;
+  document.getElementById("sigHint").textContent="Looking good!";
+  document.getElementById("sigHint").className="sig-hint signed";
+});
+canvas.addEventListener("mouseup",  function(){drawing=false; captureSignature()});
+canvas.addEventListener("mouseleave",function(){drawing=false});
+
+canvas.addEventListener("touchstart",function(e){
+  e.preventDefault(); drawing=true;
+  var p=getPos(e); lastX=p.x; lastY=p.y;
+  document.getElementById("sigContainer").classList.add("active");
+},{passive:false});
+canvas.addEventListener("touchmove",function(e){
+  e.preventDefault();
+  if(!drawing) return;
+  var p=getPos(e);
+  ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke();
+  lastX=p.x; lastY=p.y; sigHasMark=true;
+  document.getElementById("sigHint").textContent="Looking good!";
+  document.getElementById("sigHint").className="sig-hint signed";
+},{passive:false});
+canvas.addEventListener("touchend",function(){drawing=false; captureSignature()});
+
+document.getElementById("sigClear").addEventListener("click",function(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  sigHasMark=false; sigBase64="";
+  document.getElementById("sigHint").textContent="Draw your signature above using mouse or finger";
+  document.getElementById("sigHint").className="sig-hint";
+  document.getElementById("sigContainer").classList.remove("active","invalid");
+  document.getElementById("sigErr").classList.remove("show");
+});
+
+function captureSignature(){
+  if(sigHasMark){
+    sigBase64=canvas.toDataURL("image/png").split(",")[1];
+  }
+}
+
+// ── REVIEW ───────────────────────────────────────────
+function buildReview(){
+  var g=function(n){return(document.querySelector("[name='"+n+"']")||{}).value||"—"};
+  document.getElementById("rv-name").textContent=(g("first_name")+" "+g("last_name")).trim()||"—";
+  document.getElementById("rv-dob").textContent=g("dob");
+  document.getElementById("rv-email").textContent=g("email");
+  document.getElementById("rv-phone").textContent=g("phone");
+  document.getElementById("rv-bat").textContent=g("batting_style")||"—";
+  document.getElementById("rv-bowl").textContent=g("bowling_style")||"—";
+  document.getElementById("rv-yrs").textContent=g("years_playing")||"—";
+  var exp=document.querySelector("input[name='experience']:checked");
+  document.getElementById("rv-exp").textContent=exp?exp.value:"—";
+  var pos=Array.from(document.querySelectorAll("input[name='position[]']:checked")).map(function(c){return c.value});
+  document.getElementById("rv-pos").innerHTML=pos.length?pos.map(function(p){return'<span class="chip-sm">'+p+"</span>"}).join(""):"—";
+  var av=Array.from(document.querySelectorAll("input[name='availability[]']:checked")).map(function(c){return c.value});
+  document.getElementById("rv-avail").innerHTML=av.length?av.map(function(a){return'<span class="chip-sm">'+a+"</span>"}).join(""):"—";
+
+  // Consents
+  var consentLabels={"consent_player":"Player consent & code of conduct","consent_guardian":"Parent/guardian consent","consent_medical":"Medical disclosure","consent_media":"Photo & media usage"};
+  var agreed=Object.keys(consentLabels).filter(function(k){return document.getElementById(k)&&document.getElementById(k).checked});
+  document.getElementById("rv-consents").innerHTML=agreed.map(function(k){return'<span class="chip-sm">'+consentLabels[k]+"</span>"}).join("")||"—";
+
+  // Photo
+  var rp=document.getElementById("reviewPhoto");
+  if(photoBase64){rp.src="data:"+photoMime+";base64,"+photoBase64;rp.classList.add("show");}
+  else rp.classList.remove("show");
+
+  // Signature
+  captureSignature();
+  var rs=document.getElementById("reviewSig");
+  if(sigBase64){rs.src="data:image/png;base64,"+sigBase64;rs.classList.add("show");}
+  else rs.classList.remove("show");
+}
+
+// ── SUBMIT ───────────────────────────────────────────
+function submitForm(){
+  var spinner=document.getElementById("spinner");
+  var btn=document.getElementById("submitBtn");
+  captureSignature();
+  spinner.classList.add("show"); btn.disabled=true;
+  var fd=new FormData(document.getElementById("regForm"));
+  if(photoBase64){fd.append("photo_base64",photoBase64);fd.append("photo_mime",photoMime);fd.append("photo_name",photoName);}
+  if(sigBase64){fd.append("signature_base64",sigBase64);}
+  fetch(SCRIPT_URL,{method:"POST",body:fd,mode:"no-cors"})
+  .then(function(){
+    var name=(document.querySelector("[name='first_name']")||{}).value||"";
+    window.location.href="thankyou.html?name="+encodeURIComponent(name);
+  })
+  .catch(function(err){spinner.classList.remove("show");btn.disabled=false;alert("Something went wrong. Please try again.");console.error(err);});
+}
+
+// Live clear errors
+document.getElementById("regForm").querySelectorAll("input,select,textarea").forEach(function(el){
+  el.addEventListener("input",function(){var f=el.closest(".field");if(f) f.classList.remove("invalid")});
+});
+document.querySelectorAll(".consent-item input[type=checkbox]").forEach(function(cb){
+  cb.addEventListener("change",function(){
+    var ci=cb.closest(".consent-item");
+    if(cb.checked) ci.classList.remove("invalid");
+  });
+});
+
+window.addEventListener("resize",function(){if(document.querySelector("[data-step='4']").classList.contains("active")) resizeCanvas()});
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration Received — Cricket Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: #0f5229;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.025) 0px,
+        rgba(255,255,255,0.025) 1px,
+        transparent 1px,
+        transparent 28px
+      );
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 56px 48px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    @media (max-width: 480px) { .card { padding: 36px 24px; } }
+
+    .icon {
+      width: 72px; height: 72px;
+      background: #e8f5ed;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon svg { width: 36px; height: 36px; }
+
+    .ref-badge {
+      display: inline-block;
+      background: #fdf6e3;
+      border: 1.5px solid #e8d48a;
+      color: #5a4a00;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: #0f5229;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    h1 span { color: #c9a227; }
+
+    p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    .what-next {
+      background: #f7f8fa;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+      text-align: left;
+    }
+    .what-next h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1a7c3e;
+      margin-bottom: 12px;
+    }
+    .what-next ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .what-next li {
+      font-size: 14px;
+      color: #444;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .what-next li::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: #1a7c3e;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 13px 32px;
+      background: #1a7c3e;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: #0f5229; }
+
+    @keyframes pop {
+      0%   { transform: scale(0.6); opacity: 0; }
+      70%  { transform: scale(1.1); }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+    .icon { animation: pop 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <div class="icon">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="17" fill="#1a7c3e"/>
+      <path d="M10 18.5l5.5 5.5 10.5-11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="ref-badge" id="refBadge">Reference #—</div>
+
+  <h1>You're <span>registered!</span></h1>
+  <p id="playerName">Thanks for signing up. We've received your registration and sent a confirmation to your email.</p>
+  <p>A member of our team will be in touch with you shortly about next steps, training schedules, and trial dates.</p>
+
+  <div class="what-next">
+    <h2>What happens next</h2>
+    <ul>
+      <li>Check your inbox for a confirmation email with your reference number.</li>
+      <li>Our team will review your registration within 2–3 business days.</li>
+      <li>You'll be contacted about upcoming trials or training sessions.</li>
+      <li>Bring your registration number to your first session.</li>
+    </ul>
+  </div>
+
+  <a href="index.html" class="back-btn">Back to website</a>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name');
+  const ref  = params.get('ref');
+  if (name) {
+    document.getElementById('playerName').textContent =
+      `Thanks for signing up, ${name}! We've received your registration and sent a confirmation to your email.`;
+  }
+  if (ref) {
+    document.getElementById('refBadge').textContent = `Reference #${ref}`;
+  }
+</script>
+</body>
+</html>
