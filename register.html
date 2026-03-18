@@ -20,15 +20,16 @@
 
     /* ── HEADER ── */
     .site-header{background:var(--navy);display:flex;flex-direction:column;align-items:center;border-bottom:3px solid var(--gold);}
-    .title-logo{width:80px;height:80px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));}
+    .header-banner-wrap{width:100%;max-width:var(--step-w);display:flex;justify-content:center;padding:20px 20px 0;}
+    .header-banner-img{width:100%;max-width:480px;height:auto;display:block;mix-blend-mode:lighten;filter:drop-shadow(0 2px 12px rgba(0,0,0,.3));}
 
-    .header-title-bar{width:100%;background:var(--navy-m);display:flex;align-items:center;gap:16px;padding:12px 24px 16px;position:relative;overflow:hidden;}
-    .title-text{flex:1;text-align:center;}
+    .header-title-bar{width:100%;background:var(--navy-m);text-align:center;padding:12px 20px 16px;position:relative;overflow:hidden;}
+    
     .header-title-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
     .header-title-bar::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 1px,transparent 1px,transparent 24px);pointer-events:none;}
-    .header-title-bar h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(16px,3.2vw,22px);font-weight:800;color:var(--white);letter-spacing:1px;text-transform:uppercase;text-shadow:0 2px 6px rgba(0,0,0,.4);position:relative;z-index:1;margin:0;}
+    .header-title-bar h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(18px,3.5vw,26px);font-weight:800;color:var(--white);letter-spacing:1.5px;text-transform:uppercase;text-shadow:0 2px 6px rgba(0,0,0,.4);position:relative;z-index:1;}
     .header-title-bar h1 em{color:var(--gold);font-style:normal;}
-    .header-title-bar p{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px;letter-spacing:.3px;position:relative;z-index:1;text-align:center;}
+    .header-title-bar p{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px;letter-spacing:.3px;position:relative;z-index:1;}
     .header-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:2px 10px;border-radius:20px;margin-top:6px;position:relative;z-index:1;}
 
     /* ── PROGRESS ── */
@@ -62,7 +63,7 @@
     .panel-body{padding:28px 32px;}
     .panel-nav{padding:0 32px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:20px;}
 
-    @media(max-width:560px){.panel-head,.panel-body,.panel-nav{padding-left:18px;padding-right:18px;}.prog-lbl{display:none;}.title-logo{width:56px !important;height:56px !important;}}
+    @media(max-width:560px){.panel-head,.panel-body,.panel-nav{padding-left:18px;padding-right:18px;}.prog-lbl{display:none;}.header-banner-img{max-width:320px !important;}}
 
     /* ── FIELDS ── */
     .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
@@ -181,16 +182,18 @@
 
 <!-- Header -->
 <div class="site-header">
-  <div class="header-title-bar">
-    <img class="title-logo"
+  <!-- Full-width banner image — mix-blend-mode:lighten removes white background -->
+  <div class="header-banner-wrap">
+    <img class="header-banner-img"
          src="jpl-logo.png"
          alt="JPL Cricket 2026"
          onerror="this.style.display='none'"/>
-    <div class="title-text">
-      <h1>JPL Cricket <em>2026</em> Registrations</h1>
-      <p>Fill out the form carefully for registration</p>
-      <div class="header-badge">Season 2026 &nbsp;|&nbsp; Men&#8217;s Cricket</div>
-    </div>
+  </div>
+  <!-- Title bar -->
+  <div class="header-title-bar">
+    <h1>JPL Cricket <em>2026</em> Registrations</h1>
+    <p>Fill out the form carefully for registration</p>
+    <div class="header-badge">Season 2026 &nbsp;|&nbsp; Men&#8217;s Cricket</div>
   </div>
 </div>
 
