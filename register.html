@@ -19,19 +19,61 @@
     body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
     /* ── HEADER ── */
-    .site-header{background:var(--navy);display:flex;flex-direction:column;align-items:center;border-bottom:3px solid var(--gold);}
-    .header-banner-wrap{width:100%;max-width:var(--step-w);display:flex;justify-content:center;padding:20px 20px 0;}
-    .header-banner-img{width:100%;max-width:480px;height:auto;display:block;mix-blend-mode:lighten;filter:drop-shadow(0 2px 12px rgba(0,0,0,.3));}
-
-    .header-title-bar{width:100%;background:var(--navy-m);text-align:center;padding:12px 20px 16px;position:relative;overflow:hidden;}
-    
-    .header-title-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-    .header-title-bar::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 1px,transparent 1px,transparent 24px);pointer-events:none;}
-    .header-title-bar h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(18px,3.5vw,26px);font-weight:800;color:var(--white);letter-spacing:1.5px;text-transform:uppercase;text-shadow:0 2px 6px rgba(0,0,0,.4);position:relative;z-index:1;}
+    .site-header{
+      background:var(--navy);
+      display:flex;flex-direction:column;align-items:center;
+      overflow:hidden;position:relative;
+    }
+    .site-header::after{
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:repeating-linear-gradient(135deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 28px);
+    }
+    /* Banner image — screen blend makes black bg invisible on navy */
+    .header-banner-wrap{
+      width:100%;
+      display:flex;justify-content:flex-start;align-items:center;
+      background:var(--navy);
+      padding:0;
+      position:relative;z-index:1;
+    }
+    .header-banner-img{
+      width:auto;max-width:240px;height:80px;
+      display:block;object-fit:contain;object-position:left center;
+      mix-blend-mode:screen;
+    }
+    /* Title bar */
+    .header-title-bar{
+      width:100%;
+      background:var(--navy-m);
+      text-align:center;
+      padding:12px 20px 16px;
+      position:relative;z-index:1;
+      border-top:1px solid rgba(245,168,0,.3);
+      border-bottom:3px solid var(--gold);
+    }
+    .header-title-bar::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    }
+    .header-title-bar h1{
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(18px,3.5vw,26px);font-weight:800;
+      color:var(--white);letter-spacing:1.5px;text-transform:uppercase;
+      text-shadow:0 2px 6px rgba(0,0,0,.5);
+      margin:0;
+    }
     .header-title-bar h1 em{color:var(--gold);font-style:normal;}
-    .header-title-bar p{font-size:12px;color:rgba(255,255,255,.65);margin-top:4px;letter-spacing:.3px;position:relative;z-index:1;}
-    .header-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:2px 10px;border-radius:20px;margin-top:6px;position:relative;z-index:1;}
-
+    .header-title-bar p{
+      font-size:12px;color:rgba(255,255,255,.6);
+      margin-top:4px;letter-spacing:.3px;
+    }
+    .header-badge{
+      display:inline-flex;align-items:center;
+      background:var(--gold);color:var(--navy);
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+      padding:2px 12px;border-radius:20px;margin-top:8px;
+    }
     /* ── PROGRESS ── */
     .progress-wrap{background:var(--navy);padding:16px 20px 0;border-top:1px solid rgba(245,168,0,.2);}
     .progress-inner{max-width:var(--step-w);margin:0 auto;display:flex;gap:0;}
@@ -63,7 +105,7 @@
     .panel-body{padding:28px 32px;}
     .panel-nav{padding:0 32px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:20px;}
 
-    @media(max-width:560px){.panel-head,.panel-body,.panel-nav{padding-left:18px;padding-right:18px;}.prog-lbl{display:none;}.header-banner-img{max-width:320px !important;}}
+    @media(max-width:560px){.panel-head,.panel-body,.panel-nav{padding-left:18px;padding-right:18px;}.prog-lbl{display:none;}.header-banner-img{max-width:340px !important;}}
 
     /* ── FIELDS ── */
     .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
@@ -182,14 +224,13 @@
 
 <!-- Header -->
 <div class="site-header">
-  <!-- Full-width banner image — mix-blend-mode:lighten removes white background -->
+  <!-- Logo with black bg — mix-blend-mode:screen makes black transparent on navy -->
   <div class="header-banner-wrap">
     <img class="header-banner-img"
          src="jpl-logo.png"
-         alt="JPL Cricket 2026"
+         alt="Jain Premier League Toronto"
          onerror="this.style.display='none'"/>
   </div>
-  <!-- Title bar -->
   <div class="header-title-bar">
     <h1>JPL Cricket <em>2026</em> Registrations</h1>
     <p>Fill out the form carefully for registration</p>
