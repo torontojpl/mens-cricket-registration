@@ -3,190 +3,1008 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registration Received — Cricket Club</title>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+  <title>JPL Cricket 2026 Registrations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Barlow', sans-serif;
-      background: #0f5229;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 16px;
-      position: relative;
-      overflow: hidden;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0b1d3a;--navy-m:#122448;--navy-l:#1a3366;
+      --gold:#f5a800;--gold-d:#c98700;--gold-l:#fff8e6;
+      --red:#c0392b;--green:#1a7c3e;--green-l:#e8f5ed;
+      --white:#ffffff;--text:#1a1a1a;--muted:#5a5a5a;
+      --border:#d5d9e0;--bg:#e8ecf2;--radius:8px;--step-w:860px;
+      --orange:var(--gold);--orange-d:var(--gold-d);--orange-l:var(--gold-l);
+      --blue:var(--navy);--blue-l:#e8eef8;
     }
-    body::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(255,255,255,0.025) 0px,
-        rgba(255,255,255,0.025) 1px,
-        transparent 1px,
-        transparent 28px
-      );
-    }
-    .card {
-      background: white;
-      border-radius: 20px;
-      padding: 56px 48px;
-      max-width: 520px;
-      width: 100%;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-    @media (max-width: 480px) { .card { padding: 36px 24px; } }
+    body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
-    .icon {
-      width: 72px; height: 72px;
-      background: #e8f5ed;
-      border-radius: 50%;
-      margin: 0 auto 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* ── HEADER ── */
+    .site-header{
+      background:var(--navy);
+      display:flex;align-items:center;
+      justify-content:center;
+      border-bottom:none;
+      overflow:hidden;position:relative;
+      padding:12px 24px 10px;
+      gap:18px;
     }
-    .icon svg { width: 36px; height: 36px; }
+    .site-header::after{
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:repeating-linear-gradient(135deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 28px);
+    }
+    .site-header::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    }
+    /* Logo sits in same row as title — screen blend removes black bg */
+    .header-logo{
+      flex-shrink:0;
+      width:120px;height:60px;
+      object-fit:contain;object-position:center;
+      mix-blend-mode:screen;
+      position:relative;z-index:1;
+    }
+    /* Vertical gold divider between logo and text */
+    .header-divider{
+      width:2px;height:50px;
+      background:var(--gold);
+      flex-shrink:0;opacity:.7;
+      position:relative;z-index:1;
+    }
+    /* Title text block */
+    .header-text{
+      text-align:center;
+      position:relative;z-index:1;
+    }
+    .header-text h1{
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(18px,3.2vw,26px);
+      font-weight:800;color:var(--white);
+      letter-spacing:1.5px;text-transform:uppercase;
+      text-shadow:0 2px 6px rgba(0,0,0,.5);
+      margin:0;line-height:1.1;
+    }
+    .header-text h1 em{color:var(--gold);font-style:normal;}
+    .header-text p{
+      font-size:12px;color:rgba(255,255,255,.6);
+      margin-top:4px;letter-spacing:.3px;
+    }
+    .header-badge{
+      display:inline-flex;align-items:center;
+      background:var(--gold);color:var(--navy);
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+      padding:2px 12px;border-radius:20px;margin-top:7px;
+    }
+    /* ── PROGRESS ── */
+    .progress-wrap{background:var(--navy);padding:10px 20px 0;}
+    .progress-inner{max-width:var(--step-w);margin:0 auto;display:flex;gap:0;padding:0 20px;}
+    .prog-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;cursor:default;}
+    .prog-item:not(:last-child)::after{content:'';position:absolute;top:13px;left:calc(50% + 13px);right:calc(-50% + 13px);height:2px;background:rgba(255,255,255,.2);}
+    .prog-item.done:not(:last-child)::after{background:var(--orange);}
+    .prog-dot{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.4);background:transparent;transition:all .3s;z-index:1;}
+    .prog-item.active .prog-dot{background:var(--orange);border-color:var(--orange);color:white;}
+    .prog-item.done .prog-dot{background:var(--green);border-color:var(--green);color:white;font-size:0;}
+    .prog-item.done .prog-dot::after{content:'';width:9px;height:5px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px);display:block;}
+    .prog-lbl{font-size:9px;color:rgba(255,255,255,.35);text-align:center;white-space:nowrap;padding-bottom:10px;}
+    .prog-item.active .prog-lbl{color:rgba(255,255,255,.9);}
+    .prog-item.done  .prog-lbl{color:rgba(255,255,255,.6);}
 
-    .ref-badge {
-      display: inline-block;
-      background: #fdf6e3;
-      border: 1.5px solid #e8d48a;
-      color: #5a4a00;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      letter-spacing: 0.5px;
-    }
+    /* ── CARD ── */
+    .form-wrap{flex:1;display:flex;justify-content:center;padding:0 8px 60px;}
+    .form-card{width:100%;max-width:var(--step-w);background:var(--white);border-radius:0 0 16px 16px;box-shadow:0 6px 32px rgba(0,0,0,.1);overflow:hidden;}
 
-    h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 38px;
-      font-weight: 800;
-      color: #0f5229;
-      line-height: 1.1;
-      margin-bottom: 14px;
-    }
-    h1 span { color: #c9a227; }
+    /* ── PANELS ── */
+    .panel{display:none;}
+    .panel.active{display:block;animation:sIn .25s ease both;}
+    .panel.active.back{animation:sBack .25s ease both;}
+    @keyframes sIn  {from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+    @keyframes sBack{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
 
-    p {
-      font-size: 16px;
-      color: #555;
-      line-height: 1.65;
-      margin-bottom: 10px;
-    }
+    .panel-head{background:var(--gold-l);border-bottom:3px solid var(--gold);padding:20px 32px 16px;}
+    .panel-head h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--navy);letter-spacing:.3px;}
+    .panel-head p{font-size:13px;color:var(--muted);margin-top:3px;}
+    .panel-body{padding:28px 32px;}
+    .panel-nav{padding:0 32px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--border);padding-top:20px;}
 
-    .what-next {
-      background: #f7f8fa;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin: 28px 0;
-      text-align: left;
-    }
-    .what-next h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #1a7c3e;
-      margin-bottom: 12px;
-    }
-    .what-next ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .what-next li {
-      font-size: 14px;
-      color: #444;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      line-height: 1.5;
-    }
-    .what-next li::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: #1a7c3e;
-      border-radius: 50%;
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
+    @media(max-width:560px){.panel-head,.panel-body,.panel-nav{padding-left:18px;padding-right:18px;}.prog-lbl{display:none;}.header-logo{width:80px !important;height:44px !important;}.header-divider{display:none;}.header-text h1{font-size:16px !important;}}
 
-    .back-btn {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 13px 32px;
-      background: #1a7c3e;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      transition: background 0.2s;
-    }
-    .back-btn:hover { background: #0f5229; }
+    /* ── FIELDS ── */
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+    .full{grid-column:1/-1;}
+    @media(max-width:520px){.g2,.g3{grid-template-columns:1fr;}}
 
-    @keyframes pop {
-      0%   { transform: scale(0.6); opacity: 0; }
-      70%  { transform: scale(1.1); }
-      100% { transform: scale(1);   opacity: 1; }
-    }
-    .icon { animation: pop 0.5s cubic-bezier(.34,1.56,.64,1) both; }
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .field label{font-size:13px;font-weight:600;color:var(--text);}
+    .req{color:#c0392b;margin-left:2px;}
+    .field-hint{font-size:11px;color:var(--muted);margin-top:-2px;}
+
+    input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+      width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);
+      font-family:'Barlow',sans-serif;font-size:14px;color:var(--text);background:var(--white);
+      transition:border-color .2s,box-shadow .2s;appearance:none;outline:none;}
+    input:focus,select:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(245,168,0,.18);}
+    select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a5a5a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;}
+    textarea{resize:vertical;min-height:120px;line-height:1.6;}
+    .err{font-size:11px;color:#c0392b;display:none;margin-top:2px;}
+    .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#c0392b;}
+    .field.invalid .err{display:block;}
+
+    /* ── RADIO / CHECKBOX GROUPS ── */
+    .radio-group,.check-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
+    .radio-group label,.check-group label{
+      display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);
+      cursor:pointer;padding:8px 14px;border:1.5px solid var(--border);
+      border-radius:var(--radius);transition:all .18s;user-select:none;background:var(--white);}
+    .radio-group label:has(input:checked),.check-group label:has(input:checked){
+      border-color:var(--orange);background:var(--orange-l);color:var(--orange-d);font-weight:600;}
+    .radio-group input,.check-group input{accent-color:var(--orange);width:16px;height:16px;}
+
+    /* ── SECTION DIVIDER ── */
+    .section-div{display:flex;align-items:center;gap:10px;margin:22px 0 16px;}
+    .section-div span{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);white-space:nowrap;}
+    .section-div::before,.section-div::after{content:'';flex:1;height:1px;background:var(--border);}
+
+    /* ── CONSENT ITEMS ── */
+    .consent-block{background:#fafafa;border:1.5px solid var(--border);border-radius:var(--radius);padding:0;overflow:hidden;margin-bottom:10px;}
+    .consent-block table{width:100%;border-collapse:collapse;}
+    .consent-block th{background:var(--navy);color:white;font-size:12px;font-weight:700;padding:10px 14px;text-align:left;}
+    .consent-block th:last-child{text-align:center;width:70px;}
+    .consent-block td{padding:12px 14px;font-size:13px;color:var(--text);border-top:1px solid var(--border);line-height:1.55;vertical-align:middle;}
+    .consent-block td:last-child{text-align:center;}
+    .consent-block input[type=checkbox]{width:18px;height:18px;accent-color:var(--green);cursor:pointer;}
+    .consent-block tr:has(input:checked) td{background:var(--green-l);}
+
+    /* ── SIGNATURE ── */
+    .sig-wrap{margin-top:20px;}
+    .sig-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;}
+    .sig-container{border:2px solid var(--border);border-radius:var(--radius);background:white;position:relative;overflow:hidden;transition:border-color .2s;}
+    .sig-container.active{border-color:var(--orange);}
+    .sig-container.invalid{border-color:#c0392b;}
+    #sigCanvas{display:block;width:100%;height:160px;cursor:crosshair;touch-action:none;}
+    .sig-line{position:absolute;bottom:34px;left:32px;right:32px;border-bottom:1.5px dashed rgba(0,0,0,.15);pointer-events:none;}
+    .sig-x{position:absolute;bottom:36px;left:32px;font-size:16px;color:rgba(0,0,0,.2);pointer-events:none;line-height:1;}
+    .sig-actions{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--border);background:#fafafa;}
+    .sig-hint{font-size:12px;color:var(--muted);}
+    .sig-hint.signed{color:var(--green);font-weight:600;}
+    .btn-clr{background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+    .btn-clr:hover{border-color:#e74c3c;color:#e74c3c;}
+    .sig-err{font-size:12px;color:#c0392b;margin-top:6px;display:none;}
+    .sig-err.show{display:block;}
+
+    /* ── PAYMENT BLOCK ── */
+    .payment-block{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+    .payment-block-head{background:var(--navy);color:white;padding:12px 16px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;}
+    .payment-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--border);}
+    .payment-item:last-child{border-bottom:none;}
+    .payment-item-icon{width:44px;height:44px;border-radius:8px;background:var(--orange-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .payment-item-icon svg{width:22px;height:22px;}
+    .payment-item-info{flex:1;}
+    .payment-item-name{font-size:14px;font-weight:600;color:var(--text);}
+    .payment-item-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+    .payment-item-price{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--orange-d);}
+    .payment-total{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--navy);border-top:2px solid var(--gold);}
+    .payment-total-lbl{font-weight:700;font-size:14px;color:var(--gold);}
+    .payment-total-amt{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:white;}
+
+    .donation-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+    .donation-row label{font-size:13px;color:var(--muted);}
+    .donation-row select{width:auto;padding:6px 32px 6px 10px;font-size:13px;}
+
+    /* ── NOTICE BOX ── */
+    .notice-box{background:var(--orange-l);border-left:4px solid var(--orange);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--orange-d);line-height:1.65;}
+    .notice-box strong{display:block;margin-bottom:4px;font-size:14px;}
+
+    /* ── STRIPE CARD PLACEHOLDER ── */
+    .stripe-field{border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;color:var(--muted);background:#fafafa;display:flex;align-items:center;gap:8px;}
+    .stripe-field svg{width:18px;height:18px;flex-shrink:0;opacity:.4;}
+
+    /* ── BUTTONS ── */
+    .btn-back{background:none;border:1.5px solid var(--border);color:var(--muted);border-radius:var(--radius);padding:11px 24px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .18s;}
+    .btn-back:hover{border-color:var(--orange);color:var(--orange);}
+    .btn-back:disabled{opacity:.3;pointer-events:none;}
+    .btn-next{flex:1;background:var(--orange);color:white;border:none;border-radius:var(--radius);padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:background .18s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-next:hover{background:var(--orange-d);}
+    .btn-next:active{transform:scale(.98);}
+    .btn-next:disabled{background:#aaa;cursor:not-allowed;}
+    .btn-next svg{width:16px;height:16px;flex-shrink:0;}
+    .btn-submit{background:var(--gold);color:var(--navy);}
+    .btn-submit:hover{background:var(--gold-d);color:var(--navy);}
+
+    /* ── SPINNER ── */
+    #spinner{display:none;position:fixed;inset:0;background:rgba(255,255,255,.85);align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px;}
+    #spinner.show{display:flex;}
+    .spin-ring{width:48px;height:48px;border:4px solid #fde8d0;border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #spinner p{color:var(--orange-d);font-weight:600;font-size:15px;}
   </style>
 </head>
 <body>
-<div class="card">
 
-  <div class="icon">
-    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="18" cy="18" r="17" fill="#1a7c3e"/>
-      <path d="M10 18.5l5.5 5.5 10.5-11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+<div id="spinner"><div class="spin-ring"></div><p>Submitting your registration…</p></div>
+
+<!-- Header -->
+<div class="site-header">
+  <img class="header-logo"
+       src="jpl-logo.png"
+       alt="Jain Premier League Toronto"
+       onerror="this.style.display='none'"/>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>JPL Cricket <em>2026</em> Registrations</h1>
+    <p>Fill out the form carefully for registration</p>
+    <div class="header-badge">Season 2026 &nbsp;|&nbsp; Men&#8217;s Cricket</div>
   </div>
-
-  <div class="ref-badge" id="refBadge">Reference #—</div>
-
-  <h1>You're <span>registered!</span></h1>
-  <p id="playerName">Thanks for signing up. We've received your registration and sent a confirmation to your email.</p>
-  <p>A member of our team will be in touch with you shortly about next steps, training schedules, and trial dates.</p>
-
-  <div class="what-next">
-    <h2>What happens next</h2>
-    <ul>
-      <li>Check your inbox for a confirmation email with your reference number.</li>
-      <li>Our team will review your registration within 2–3 business days.</li>
-      <li>You'll be contacted about upcoming trials or training sessions.</li>
-      <li>Bring your registration number to your first session.</li>
-    </ul>
-  </div>
-
-  <a href="index.html" class="back-btn">Back to website</a>
 </div>
 
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="prog-item active" id="dot-0"><div class="prog-dot">1</div><div class="prog-lbl">Player Info</div></div>
+    <div class="prog-item"        id="dot-1"><div class="prog-dot">2</div><div class="prog-lbl">Jersey</div></div>
+    <div class="prog-item"        id="dot-2"><div class="prog-dot">3</div><div class="prog-lbl">Community</div></div>
+    <div class="prog-item"        id="dot-3"><div class="prog-dot">4</div><div class="prog-lbl">Consent</div></div>
+    <div class="prog-item"        id="dot-4"><div class="prog-dot">5</div><div class="prog-lbl">Payment</div></div>
+  </div>
+</div>
+
+<div class="form-wrap"><div class="form-card"><form id="regForm" novalidate>
+
+  <!-- Hidden fields -->
+  <input type="hidden" name="sport" value="Cricket — Men"/>
+  <input type="hidden" name="form_name" value="JPL Cricket 2026"/>
+
+  <!-- ══ PAGE 1 — Player Info ══ -->
+  <div class="panel active" data-step="0">
+    <div class="panel-head">
+      <h2>Player Information</h2>
+      <p>Page 1 of 5 — Personal details and cricket profile</p>
+    </div>
+    <div class="panel-body">
+
+      <!-- Name -->
+      <div class="section-div"><span>Player name</span></div>
+      <div class="g3">
+        <div class="field" id="f-fn">
+          <label>First Name as per Govt. ID <span class="req">*</span></label>
+          <input type="text" name="first_name" autocomplete="given-name"/>
+          <span class="err">Required</span>
+        </div>
+        <div class="field">
+          <label>Middle Name as per Govt. ID</label>
+          <input type="text" name="middle_name"/>
+        </div>
+        <div class="field" id="f-ln">
+          <label>Last Name as per Govt. ID <span class="req">*</span></label>
+          <input type="text" name="last_name" autocomplete="family-name"/>
+          <span class="err">Required</span>
+        </div>
+      </div>
+
+      <!-- Basic info -->
+      <div class="section-div"><span>Basic info</span></div>
+      <div class="g2">
+        <div class="field" id="f-gender">
+          <label>Gender <span class="req">*</span></label>
+          <select name="gender">
+            <option value="">Please Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-age">
+          <label>Age <span class="req">*</span></label>
+          <input type="number" name="age" min="16" max="65" placeholder="Enter your age (16–65)"/>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-email">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="example@example.com" autocomplete="email"/>
+          <span class="err">Valid email required</span>
+        </div>
+        <div class="field" id="f-phone">
+          <label>Mobile Number <span class="req">*</span></label>
+          <input type="tel" name="phone" placeholder="(000) 000-0000" autocomplete="tel"/>
+          <span class="err">Required</span>
+        </div>
+        <div class="field full" id="f-city">
+          <label>City <span class="req">*</span></label>
+          <select name="city">
+            <option value="">Please Select</option>
+            <option>Ajax</option>
+            <option>Alliston</option>
+            <option>Barrie</option>
+            <option>Belleville</option>
+            <option>Brampton</option>
+            <option>Brant</option>
+            <option>Brantford</option>
+            <option>Brockville</option>
+            <option>Burlington</option>
+            <option>Cambridge</option>
+            <option>Clarence-Rockland</option>
+            <option>Cornwall</option>
+            <option>Dryden</option>
+            <option>Elliot Lake</option>
+            <option>Etobicoke</option>
+            <option>Greater Sudbury</option>
+            <option>Guelph</option>
+            <option>Haldimand County</option>
+            <option>Hamilton</option>
+            <option>Kawartha Lakes</option>
+            <option>Kenora</option>
+            <option>Kingston</option>
+            <option>Kitchener</option>
+            <option>London</option>
+            <option>Markham</option>
+            <option>Mississauga</option>
+            <option>Not Applicable</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+      </div>
+
+      <!-- JPL history -->
+      <div class="section-div"><span>JPL history</span></div>
+      <div class="g2">
+        <div class="field full" id="f-participated">
+          <label>Did you participate in JPL 2025? <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="participated_2024" value="Yes" onchange="togglePrevTeam(this.value)"/> Yes</label>
+            <label><input type="radio" name="participated_2024" value="No"  onchange="togglePrevTeam(this.value)"/> No</label>
+          </div>
+          <span class="err" id="participated-err" style="display:none">Required</span>
+        </div>
+        <div class="field full" id="f-prev-team" style="display:none">
+          <label>Previous Team in JPL 2025 <span class="req">*</span></label>
+          <select name="previous_team">
+            <option value="">Please Select</option>
+            <option>Aagam Avengers (AA)</option>
+            <option>Adi Bulls (AB)</option>
+            <option>Airavata Riders (AR)</option>
+            <option>Arihant Royal Challengers (ARC)</option>
+            <option>Aryawart Kings (AK)</option>
+            <option>Bahubali Warriors (BW)</option>
+            <option>Chakravarti Champions (CC)</option>
+            <option>Chakrawarti Super Giants (CSG)</option>
+            <option>Dharma Defenders (DD)</option>
+            <option>JambuDweep Capitals (JDC)</option>
+            <option>Karma Crushers (KC)</option>
+            <option>Karma Knight Riders (KKR)</option>
+            <option>Maitri Mavericks (MM)</option>
+            <option>Nirjara Ninjas (NN)</option>
+            <option>Parshwa Panthers (PP)</option>
+            <option>Ratnatray Royals (RR)</option>
+            <option>Samyak Spartans (SS)</option>
+            <option>Sunrisers Kailasha (SK)</option>
+            <option>Tatwarth Titans (TT)</option>
+            <option>Veer Lions (VL)</option>
+            <option>Not Applicable</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+      </div>
+
+      <!-- Cricket skills -->
+      <div class="section-div"><span>Cricket skills</span></div>
+      <div class="g2">
+        <div class="field full" id="f-primary">
+          <label>Primary Skill <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="primary_skill" value="Batsman"/> Batsman</label>
+            <label><input type="radio" name="primary_skill" value="Bowler"/> Bowler</label>
+            <label><input type="radio" name="primary_skill" value="All-Rounder"/> All-Rounder</label>
+            <label><input type="radio" name="primary_skill" value="Wicket-Keeper"/> Wicket-Keeper</label>
+          </div>
+          <span class="err" id="primary-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full">
+          <label>Batting Hand <span class="req">*</span></label>
+          <div class="radio-group" id="rg-batting-hand">
+            <label><input type="radio" name="batting_hand" value="Right Hand Batsman"/> Right Hand Batsman</label>
+            <label><input type="radio" name="batting_hand" value="Left Hand Batsman"/> Left Hand Batsman</label>
+            <label><input type="radio" name="batting_hand" value="Not Applicable"/> Not Applicable</label>
+          </div>
+          <span class="err" id="batting-hand-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full">
+          <label>Batting Skill <span class="req">*</span></label>
+          <div class="radio-group" id="rg-batting-skill">
+            <label><input type="radio" name="batting_skill" value="Advanced Batsman"/> Advanced Batsman</label>
+            <label><input type="radio" name="batting_skill" value="Intermediate Batsman"/> Intermediate Batsman</label>
+            <label><input type="radio" name="batting_skill" value="Beginner Batsman"/> Beginner Batsman</label>
+            <label><input type="radio" name="batting_skill" value="Not Applicable"/> Not Applicable</label>
+          </div>
+          <span class="err" id="batting-skill-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full">
+          <label>Bowling Hand <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="bowling_hand" value="Right Arm Medium"/> Right Arm Medium</label>
+            <label><input type="radio" name="bowling_hand" value="Left Arm Medium"/> Left Arm Medium</label>
+            <label><input type="radio" name="bowling_hand" value="Right Arm Off-Spin"/> Right Arm Off-Spin</label>
+            <label><input type="radio" name="bowling_hand" value="Left Arm Off-Spin"/> Left Arm Off-Spin</label>
+            <label><input type="radio" name="bowling_hand" value="Right Arm Leg-Spin"/> Right Arm Leg-Spin</label>
+            <label><input type="radio" name="bowling_hand" value="Left Arm Leg-Spin"/> Left Arm Leg-Spin</label>
+            <label><input type="radio" name="bowling_hand" value="Not Applicable"/> Not Applicable</label>
+          </div>
+          <span class="err" id="bowling-hand-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full">
+          <label>Bowling Skill <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="bowling_skill" value="Advanced Bowler"/> Advanced Bowler</label>
+            <label><input type="radio" name="bowling_skill" value="Intermediate Bowler"/> Intermediate Bowler</label>
+            <label><input type="radio" name="bowling_skill" value="Beginner Bowler"/> Beginner Bowler</label>
+            <label><input type="radio" name="bowling_skill" value="Not Applicable"/> Not Applicable</label>
+          </div>
+          <span class="err" id="bowling-skill-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full">
+          <label>Wicket-Keeping Skill <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="wk_skill" value="Advanced Wicket-Keeper"/> Advanced Wicket-Keeper</label>
+            <label><input type="radio" name="wk_skill" value="Intermediate Wicket-Keeper"/> Intermediate Wicket-Keeper</label>
+            <label><input type="radio" name="wk_skill" value="Beginner Wicket-Keeper"/> Beginner Wicket-Keeper</label>
+            <label><input type="radio" name="wk_skill" value="Not Applicable"/> Not Applicable</label>
+          </div>
+          <span class="err" id="wk-err" style="display:none">Required</span>
+        </div>
+
+        <div class="field full" id="f-experience">
+          <label>Cricket Experience <span class="req">*</span></label>
+          <textarea name="experience" placeholder="e.g. I have played cricket at various club level and playing currently with many leagues in GTA. I am Right Hand Batsman comfortable playing at any position. I can hit and hold the wicket at any crucial situation. I can also bowl medium fast with many variations."></textarea>
+          <span class="err">Required</span>
+        </div>
+
+        <!-- Photo upload -->
+        <div class="field full">
+          <label>Photo <span class="req">*</span></label>
+          <div class="photo-zone" id="uploadArea" style="border:2px dashed var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;cursor:pointer;position:relative;background:#fafafa;transition:all .2s;">
+            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;"/>
+            <div style="font-size:13px;color:var(--muted);">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="display:block;margin:0 auto 8px;opacity:.4"><circle cx="16" cy="16" r="15" stroke="#e8720c" stroke-width="1.5"/><path d="M16 22V10M10 16l6-6 6 6" stroke="#e8720c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <strong style="color:var(--orange)">Click to upload</strong> or drag &amp; drop<br>JPG, PNG — max 4 MB
+            </div>
+          </div>
+          <p style="font-size:11px;color:#c0392b;margin-top:4px;display:none" id="photoErr"></p>
+          <div id="photoPrev" style="display:none;align-items:center;gap:12px;margin-top:10px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);">
+            <img id="photoPreview" src="" alt="" style="width:60px;height:72px;object-fit:cover;border-radius:6px;border:2px solid var(--border);flex-shrink:0;"/>
+            <div style="flex:1;min-width:0;">
+              <div id="photoFn" style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+              <div id="photoFs" style="font-size:12px;color:var(--muted);margin-top:2px;"></div>
+            </div>
+            <button type="button" id="removePhoto" style="background:none;border:1.5px solid #e74c3c;color:#e74c3c;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button type="button" class="btn-back" disabled>Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(0)">Next <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 2 — Jersey ══ -->
+  <div class="panel" data-step="1">
+    <div class="panel-head">
+      <h2>Jersey Details</h2>
+      <p>Page 2 of 5 — Your jersey size and preferences</p>
+    </div>
+    <div class="panel-body">
+      <div class="notice-box">
+        <strong>Size Reference</strong>
+        Please refer to the size chart at <a href="https://cricstores.cricclubs.com/size-chart/?currency=USD" target="_blank" style="color:var(--orange-d);font-weight:600;">cricstores.cricclubs.com/size-chart</a> before selecting your sizes.
+      </div>
+      <div class="g2">
+        <div class="field" id="f-jersey-tshirt">
+          <label>Jersey T-Shirt Size <span class="req">*</span></label>
+          <select name="jersey_tshirt_size">
+            <option value="">Please Select</option>
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+            <option>2XL</option>
+            <option>3XL</option>
+            <option>4XL</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-jersey-trouser">
+          <label>Jersey Trouser Size <span class="req">*</span></label>
+          <select name="jersey_trouser_size">
+            <option value="">Please Select</option>
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+            <option>2XL</option>
+            <option>3XL</option>
+            <option>4XL</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-jersey-pref">
+          <label>Jersey Preference <span class="req">*</span></label>
+          <select name="jersey_preference">
+            <option value="">Please Select</option>
+            <option>Full Sleeve</option>
+            <option>Half Sleeve</option>
+          </select>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-jersey-name">
+          <label>Preferred Name On Jersey <span class="req">*</span></label>
+          <input type="text" name="jersey_name" placeholder="Name to print on jersey" maxlength="14"/>
+          <span class="err">Required</span>
+        </div>
+        <div class="field" id="f-jersey-number">
+          <label>Preferred Number On Jersey <span class="req">*</span></label>
+          <input type="number" name="jersey_number" placeholder="e.g. 7" min="1" max="99"/>
+          <span class="err">Required</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button type="button" class="btn-back" onclick="prevStep(1)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(1)">Next <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 3 — Community ══ -->
+  <div class="panel" data-step="2">
+    <div class="panel-head">
+      <h2>Community &amp; Feedback</h2>
+      <p>Page 3 of 5 — Help us grow the JPL community</p>
+    </div>
+    <div class="panel-body">
+      <div class="g2">
+        <div class="field full" id="f-sponsor">
+          <label>Do you know anyone who might be interested in sponsoring? <span class="req">*</span></label>
+          <div class="radio-group">
+            <label><input type="radio" name="knows_sponsor" value="Yes"/> Yes</label>
+            <label><input type="radio" name="knows_sponsor" value="No"/> No</label>
+          </div>
+          <span class="err" id="sponsor-err" style="display:none">Required</span>
+        </div>
+        <div class="field full">
+          <label>Which other sports would you like the JPL Team to organize?</label>
+          <div class="check-group">
+            <label><input type="checkbox" name="other_sports[]" value="Badminton"/> Badminton</label>
+            <label><input type="checkbox" name="other_sports[]" value="Volleyball"/> Volleyball</label>
+            <label><input type="checkbox" name="other_sports[]" value="Basketball (Age 10-15)"/> Basketball (Age 10-15)</label>
+            <label><input type="checkbox" name="other_sports[]" value="Basketball (Age 16-50)"/> Basketball (Age 16-50)</label>
+            <label><input type="checkbox" name="other_sports[]" value="Table Tennis"/> Table Tennis</label>
+            <label><input type="checkbox" name="other_sports[]" value="Chess"/> Chess</label>
+            <label><input type="checkbox" name="other_sports[]" value="Carrom"/> Carrom</label>
+            <label><input type="checkbox" name="other_sports[]" value="Pool"/> Pool</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label>Any feedback (optional)</label>
+          <textarea name="feedback" placeholder="Please provide some feedback/suggestions which will help us improve your experience."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button type="button" class="btn-back" onclick="prevStep(2)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(2)">Next <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 4 — Consent & Signature ══ -->
+  <div class="panel" data-step="3">
+    <div class="panel-head">
+      <h2>Please Read Carefully</h2>
+      <p>Page 4 of 5 — Consent declarations and signature</p>
+    </div>
+    <div class="panel-body">
+      <div class="notice-box" style="background:var(--blue-l);border-left-color:var(--navy);color:var(--navy);">
+        This league is a community event specifically for members of the Jain community, designed to foster camaraderie, build connections, and promote fitness through sports. We kindly request that you confirm your adherence to Jain principles. Any false information will result in disciplinary action.
+      </div>
+
+      <p style="font-size:14px;font-style:italic;color:var(--muted);margin-bottom:18px;">I, <strong id="playerNameDisplay" style="color:var(--text);">[Player Name]</strong>, carefully reviewed the following statements.</p>
+
+      <div class="consent-block">
+        <table>
+          <thead><tr><th>Statement</th><th>Agree</th></tr></thead>
+          <tbody>
+            <tr><td>Agrees that prior to participating, if present, I will inspect the facilities and equipment. If I believe anything to be unsafe, I will immediately advise the management of the JPL.</td><td><input type="checkbox" name="consent_1" id="consent_1"/></td></tr>
+            <tr><td>Assumes all the foregoing risks as a condition of participation and accepts personal responsibility for the damages following any such injury.</td><td><input type="checkbox" name="consent_2" id="consent_2"/></td></tr>
+            <tr><td>Unconditionally releases, waives, indemnifies and holds harmless and consents not to sue the officers, directors, administrators, agents, coaches, organizers, other employees, volunteers, sponsoring agencies, sponsors, and advertisers of the JPL.</td><td><input type="checkbox" name="consent_3" id="consent_3"/></td></tr>
+            <tr><td>Accepts responsibility for all medical expenses incurred whether or not covered by insurance. In case of emergency, accident or illness authorizes ambulance transport to the hospital.</td><td><input type="checkbox" name="consent_4" id="consent_4"/></td></tr>
+            <tr><td>Authorizes physicians, athletic trainers, technicians, first-aid personnel, nurses and dentists to perform any diagnostic, treatment or operative procedures and x-rays. No guarantee has been given as to the results of examination or treatment. Accepts total responsibility for any and all medical costs.</td><td><input type="checkbox" name="consent_5" id="consent_5"/></td></tr>
+            <tr><td>Accepts responsibility for the decision to continue participation if suffering from injuries.</td><td><input type="checkbox" name="consent_6" id="consent_6"/></td></tr>
+            <tr><td>Organizing team reserves the right to modify the schedule in the event of inclement weather or any critical, unavoidable situation, as well as to disqualify any player/team deemed inappropriate at any point in time.</td><td><input type="checkbox" name="consent_7" id="consent_7"/></td></tr>
+            <tr><td>I give permission to JPL Toronto to use my image, voice, and likeness in any media format for any purpose. I understand that my personal information and images may be used in a variety of media, including but not limited to photographs, videos, audio recordings, and written materials. I have read and understand the terms of this consent form and agree to participate voluntarily. I understand that I can withdraw my consent at any time by notifying JPL Toronto in writing.</td><td><input type="checkbox" name="consent_8" id="consent_8"/></td></tr>
+            <tr><td><strong>I agree to all the terms and conditions.</strong></td><td><input type="checkbox" name="consent_all" id="consent_all"/></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <span class="err" id="consent-err" style="display:none;margin-bottom:12px;">Please agree to all consent statements to continue.</span>
+
+      <!-- Signature -->
+      <div class="sig-wrap">
+        <div class="sig-label">I agree to the above statement — Sign here <span class="req">*</span></div>
+        <div class="sig-container" id="sigContainer">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-line"></div>
+          <div class="sig-x">✕</div>
+          <div class="sig-actions">
+            <span class="sig-hint" id="sigHint">Sign above using mouse or finger</span>
+            <button type="button" class="btn-clr" id="sigClear">Clear</button>
+          </div>
+        </div>
+        <span class="sig-err" id="sigErr">Please provide your signature</span>
+      </div>
+    </div>
+    <div class="panel-nav">
+      <button type="button" class="btn-back" onclick="prevStep(3)">Back</button>
+      <button type="button" class="btn-next" onclick="nextStep(3)">Next — Payment <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 5 — Payment ══ -->
+  <div class="panel" data-step="4">
+    <div class="panel-head">
+      <h2>Registration Payment</h2>
+      <p>Page 5 of 5 — Secure payment to complete your registration</p>
+    </div>
+    <div class="panel-body">
+
+      <div class="payment-block">
+        <div class="payment-block-head">My Products</div>
+        <div class="payment-item">
+          <div class="payment-item-icon">
+            <svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="#e8720c" stroke-width="1.5"/><path d="M3 19c0-4 3.5-7 8-7s8 3 8 7" stroke="#e8720c" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="payment-item-info">
+            <div class="payment-item-name">Player Registration</div>
+            <div class="payment-item-desc">Registration Fee — JPL Cricket 2025</div>
+          </div>
+          <div class="payment-item-price">$35.00</div>
+        </div>
+        <div class="payment-item">
+          <div class="payment-item-icon">
+            <svg viewBox="0 0 22 22" fill="none"><path d="M11 3v3M11 16v3M3 11h3M16 11h3" stroke="#e8720c" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="11" r="5" stroke="#e8720c" stroke-width="1.5"/></svg>
+          </div>
+          <div class="payment-item-info">
+            <div class="payment-item-name">General Donation</div>
+            <div class="payment-item-desc">JPL Toronto is a non-profit organization dedicated to fostering community harmony, unity and fitness through sports.</div>
+            <div class="donation-row">
+              <label>Donation Amount</label>
+              <select name="donation_amount" id="donationAmount" onchange="updateTotal()">
+                <option value="0">None</option>
+                <option value="5">$5.00</option>
+                <option value="10">$10.00</option>
+                <option value="20">$20.00</option>
+                <option value="50">$50.00</option>
+                <option value="100">$100.00</option>
+              </select>
+            </div>
+          </div>
+          <div class="payment-item-price" id="donationDisplay">Free</div>
+        </div>
+        <div class="payment-total">
+          <div class="payment-total-lbl">Total</div>
+          <div class="payment-total-amt" id="totalAmount">$35.00</div>
+        </div>
+      </div>
+
+      <div style="background:#e8eef8;border:1px solid #c0ccdd;border-radius:var(--radius);padding:16px 18px;margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--navy);margin-bottom:10px;">What happens next</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);">
+            <div style="width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</div>
+            You'll be taken to Stripe's secure page to enter your card details.
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);">
+            <div style="width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">2</div>
+            After payment you're returned here and your registration is confirmed.
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);">
+            <div style="width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">3</div>
+            You and JPL both receive a signed PDF registration card by email.
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--muted);">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="2" y="6" width="10" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4 6V4a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Payments processed securely by Stripe. Your card details never touch our servers.
+      </div>
+      <span class="err" id="payment-err" style="display:none;text-align:center;margin-top:8px;"></span>
+    </div>
+    <div class="panel-nav">
+      <button type="button" class="btn-back" onclick="prevStep(4)">Back</button>
+      <button type="button" class="btn-next btn-submit" id="payBtn" onclick="goToStripe()">
+        Pay &amp; Complete Registration
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+</form></div></div>
+
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const name = params.get('name');
-  const ref  = params.get('ref');
-  if (name) {
-    document.getElementById('playerName').textContent =
-      `Thanks for signing up, ${name}! We've received your registration and sent a confirmation to your email.`;
+// ── CONFIG ──────────────────────────────────────────
+var NETLIFY_FUNCTION_URL = "/.netlify/functions/create-checkout";
+var REGISTRATION_FEE = 35.00;
+// ───────────────────────────────────────────────────
+
+var photoBase64="", photoMime="", photoName="";
+var sigBase64="", sigHasMark=false;
+
+// ── NAVIGATION ───────────────────────────────────────
+function showStep(idx, back) {
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active","back");});
+  var p = document.querySelector("[data-step='"+idx+"']");
+  p.classList.add("active"); if(back) p.classList.add("back");
+  document.querySelectorAll(".prog-item").forEach(function(d,i){
+    d.classList.remove("active","done");
+    if(i<idx) d.classList.add("done");
+    if(i===idx) d.classList.add("active");
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(idx===3) updatePlayerName();
+  if(idx===4) resizeCanvas();
+}
+function nextStep(from){ if(validateStep(from)) showStep(from+1,false); }
+function prevStep(from){ showStep(from-1,true); }
+
+function updatePlayerName(){
+  var fn=(document.querySelector("[name='first_name']")||{}).value||"";
+  var mn=(document.querySelector("[name='middle_name']")||{}).value||"";
+  var ln=(document.querySelector("[name='last_name']") ||{}).value||"";
+  var full=[fn,mn,ln].filter(Boolean).join(" ");
+  document.getElementById("playerNameDisplay").textContent=full||"[Player Name]";
+}
+
+// ── VALIDATION ────────────────────────────────────────
+function validateStep(s){
+  var ok=true;
+
+  if(s===0){
+    // Required text fields
+    [["f-fn","first_name"],["f-ln","last_name"]].forEach(function(r){
+      var f=document.getElementById(r[0]);
+      if(!document.querySelector("[name='"+r[1]+"']").value.trim()){f.classList.add("invalid");ok=false;}
+      else f.classList.remove("invalid");
+    });
+    // Gender + City dropdowns
+    [["f-gender","gender"],["f-city","city"]].forEach(function(r){
+      var f=document.getElementById(r[0]);
+      if(!document.querySelector("[name='"+r[1]+"']").value){f.classList.add("invalid");ok=false;}
+      else f.classList.remove("invalid");
+    });
+    // Age number input
+    var ageField = document.getElementById("f-age");
+    var ageVal   = parseInt(document.querySelector("[name='age']").value);
+    if(!ageVal || ageVal < 16 || ageVal > 65){
+      ageField.classList.add("invalid");
+      ageField.querySelector(".err").textContent = "Please enter age between 16 and 65";
+      ok = false;
+    } else ageField.classList.remove("invalid");
+    // Email
+    var ef=document.getElementById("f-email"), ev=document.querySelector("[name='email']").value.trim();
+    if(!ev||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ev)){ef.classList.add("invalid");ok=false;}
+    else ef.classList.remove("invalid");
+    // Phone
+    var pf=document.getElementById("f-phone");
+    if(!document.querySelector("[name='phone']").value.trim()){pf.classList.add("invalid");ok=false;}
+    else pf.classList.remove("invalid");
+    // Radio groups
+    var radios=[
+      ["participated_2024","participated-err"],
+      ["primary_skill","primary-err"],
+      ["batting_hand","batting-hand-err"],
+      ["batting_skill","batting-skill-err"],
+      ["bowling_hand","bowling-hand-err"],
+      ["bowling_skill","bowling-skill-err"],
+      ["wk_skill","wk-err"]
+    ];
+    radios.forEach(function(r){
+      var err=document.getElementById(r[1]);
+      if(!document.querySelector("input[name='"+r[0]+"']:checked")){err.style.display="block";ok=false;}
+      else err.style.display="none";
+    });
+    // Previous team
+    var ptf=document.getElementById("f-prev-team");
+    var participated=document.querySelector("input[name='participated_2024']:checked");
+    if(participated && participated.value==="Yes"){
+      if(!document.querySelector("[name='previous_team']").value){ptf.classList.add("invalid");ok=false;}
+      else ptf.classList.remove("invalid");
+    } else {
+      ptf.classList.remove("invalid");
+    }
+    // Experience
+    var xf=document.getElementById("f-experience");
+    if(!document.querySelector("[name='experience']").value.trim()){xf.classList.add("invalid");ok=false;}
+    else xf.classList.remove("invalid");
   }
-  if (ref) {
-    document.getElementById('refBadge').textContent = `Reference #${ref}`;
+
+  if(s===1){
+    [["f-jersey-tshirt","jersey_tshirt_size"],["f-jersey-trouser","jersey_trouser_size"],
+     ["f-jersey-pref","jersey_preference"],["f-jersey-name","jersey_name"],["f-jersey-number","jersey_number"]
+    ].forEach(function(r){
+      var f=document.getElementById(r[0]);
+      if(!document.querySelector("[name='"+r[1]+"']").value.trim()){f.classList.add("invalid");ok=false;}
+      else f.classList.remove("invalid");
+    });
   }
+
+  if(s===2){
+    var se=document.getElementById("sponsor-err");
+    if(!document.querySelector("input[name='knows_sponsor']:checked")){se.style.display="block";ok=false;}
+    else se.style.display="none";
+  }
+
+  if(s===3){
+    // All 9 consent checkboxes
+    var allChecked=true;
+    for(var i=1;i<=9;i++){
+      var id=i<9?"consent_"+i:"consent_all";
+      if(!document.getElementById(id).checked){allChecked=false;break;}
+    }
+    var ce=document.getElementById("consent-err");
+    if(!allChecked){ce.style.display="block";ok=false;}
+    else ce.style.display="none";
+    // Signature
+    captureSignature();
+    var se2=document.getElementById("sigErr"),sc=document.getElementById("sigContainer");
+    if(!sigHasMark){se2.classList.add("show");sc.classList.add("invalid");ok=false;}
+    else{se2.classList.remove("show");sc.classList.remove("invalid");}
+  }
+
+  if(!ok){
+    var f=document.querySelector(".invalid,.field.invalid");
+    if(f) f.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+  return ok;
+}
+
+// ── PHOTO ─────────────────────────────────────────────
+var photoInput=document.getElementById("photoInput");
+var uploadArea=document.getElementById("uploadArea");
+var photoPrev =document.getElementById("photoPrev");
+photoInput.addEventListener("change",function(){handleFile(this.files[0]);});
+uploadArea.addEventListener("dragover",function(e){e.preventDefault();uploadArea.style.borderColor="var(--orange)";uploadArea.style.background="var(--orange-l)";});
+uploadArea.addEventListener("dragleave",function(){uploadArea.style.borderColor="";uploadArea.style.background="";});
+uploadArea.addEventListener("drop",function(e){e.preventDefault();uploadArea.style.borderColor="";uploadArea.style.background="";handleFile(e.dataTransfer.files[0]);});
+document.getElementById("removePhoto").addEventListener("click",clearPhoto);
+function handleFile(f){
+  if(!f) return;
+  var photoErrEl=document.getElementById("photoErr");
+  if(!["image/jpeg","image/png","image/webp"].includes(f.type)){photoErrEl.textContent="Please upload JPG or PNG.";photoErrEl.style.display="block";return;}
+  if(f.size>4*1024*1024){photoErrEl.textContent="Max 4 MB.";photoErrEl.style.display="block";return;}
+  photoErrEl.style.display="none";
+  photoName=f.name; photoMime=f.type;
+  var r=new FileReader();
+  r.onload=function(ev){
+    photoBase64=ev.target.result.split(",")[1];
+    document.getElementById("photoPreview").src=ev.target.result;
+    document.getElementById("photoFn").textContent=f.name;
+    document.getElementById("photoFs").textContent=(f.size/1024).toFixed(0)+" KB";
+    photoPrev.style.display="flex"; uploadArea.style.display="none";
+  };
+  r.readAsDataURL(f);
+}
+function clearPhoto(){photoBase64="";photoMime="";photoName="";photoInput.value="";document.getElementById("photoPreview").src="";photoPrev.style.display="none";uploadArea.style.display="";}
+
+// ── SIGNATURE ──────────────────────────────────────────
+var canvas=document.getElementById("sigCanvas");
+var ctx=canvas.getContext("2d");
+var drawing=false,lastX=0,lastY=0;
+function resizeCanvas(){
+  var ratio=window.devicePixelRatio||1,w=canvas.offsetWidth,h=160;
+  canvas.width=w*ratio;canvas.height=h*ratio;canvas.style.height=h+"px";
+  ctx.scale(ratio,ratio);ctx.lineWidth=2;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#1a1a1a";
+}
+function getPos(e){var rect=canvas.getBoundingClientRect();if(e.touches)return{x:e.touches[0].clientX-rect.left,y:e.touches[0].clientY-rect.top};return{x:e.clientX-rect.left,y:e.clientY-rect.top};}
+canvas.addEventListener("mousedown",function(e){drawing=true;var p=getPos(e);lastX=p.x;lastY=p.y;document.getElementById("sigContainer").classList.add("active");});
+canvas.addEventListener("mousemove",function(e){if(!drawing)return;var p=getPos(e);ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.stroke();lastX=p.x;lastY=p.y;sigHasMark=true;document.getElementById("sigHint").textContent="Looking good!";document.getElementById("sigHint").className="sig-hint signed";});
+canvas.addEventListener("mouseup",function(){drawing=false;captureSignature();});
+canvas.addEventListener("mouseleave",function(){drawing=false;});
+canvas.addEventListener("touchstart",function(e){e.preventDefault();drawing=true;var p=getPos(e);lastX=p.x;lastY=p.y;document.getElementById("sigContainer").classList.add("active");},{passive:false});
+canvas.addEventListener("touchmove",function(e){e.preventDefault();if(!drawing)return;var p=getPos(e);ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.stroke();lastX=p.x;lastY=p.y;sigHasMark=true;document.getElementById("sigHint").textContent="Looking good!";document.getElementById("sigHint").className="sig-hint signed";},{passive:false});
+canvas.addEventListener("touchend",function(){drawing=false;captureSignature();});
+document.getElementById("sigClear").addEventListener("click",function(){ctx.clearRect(0,0,canvas.width,canvas.height);sigHasMark=false;sigBase64="";document.getElementById("sigHint").textContent="Sign above using mouse or finger";document.getElementById("sigHint").className="sig-hint";document.getElementById("sigContainer").classList.remove("active","invalid");document.getElementById("sigErr").classList.remove("show");});
+function captureSignature(){if(sigHasMark)sigBase64=canvas.toDataURL("image/png").split(",")[1];}
+
+// ── PAYMENT TOTAL ──────────────────────────────────────
+function updateTotal(){
+  var donation=parseFloat(document.getElementById("donationAmount").value)||0;
+  var total=REGISTRATION_FEE+donation;
+  document.getElementById("donationDisplay").textContent=donation>0?"$"+donation.toFixed(2):"Free";
+  document.getElementById("totalAmount").textContent="$"+total.toFixed(2);
+}
+
+// ── GO TO STRIPE ───────────────────────────────────────
+function goToStripe(){
+  var spinner=document.getElementById("spinner"),payBtn=document.getElementById("payBtn");
+  captureSignature();
+  var form=document.getElementById("regForm");
+  var data={};
+  new FormData(form).forEach(function(v,k){data[k]=v;});
+  // Multi checkboxes
+  data["other_sports[]"]=Array.from(form.querySelectorAll("input[name='other_sports[]']:checked")).map(function(c){return c.value;}).join(", ");
+  // Consent summary
+  var allConsents=[];
+  for(var i=1;i<=8;i++){if(document.getElementById("consent_"+i).checked)allConsents.push("consent_"+i);}
+  data["consents_agreed"]=allConsents.join(",");
+  data["consent_all"]=document.getElementById("consent_all").checked?"Yes":"No";
+  if(photoBase64){data["photo_base64"]=photoBase64;data["photo_mime"]=photoMime;data["photo_name"]=photoName;}
+  if(sigBase64)data["signature_base64"]=sigBase64;
+  data["donation_amount"]=document.getElementById("donationAmount").value;
+  var donation=parseFloat(document.getElementById("donationAmount").value)||0;
+  data["total_amount"]=(REGISTRATION_FEE+donation).toFixed(2);
+
+  spinner.classList.add("show"); payBtn.disabled=true;
+  document.getElementById("payment-err").style.display="none";
+
+  try{sessionStorage.setItem("reg_data",JSON.stringify(data));}catch(e){}
+
+  fetch(NETLIFY_FUNCTION_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      sport:"Cricket — Men",
+      form_name:"JPL Cricket 2025",
+      first_name:data.first_name||"",
+      last_name:data.last_name||"",
+      email:data.email||"",
+      amount_cents:Math.round((REGISTRATION_FEE+donation)*100),
+      donation_cents:Math.round(donation*100),
+      reg_data:JSON.stringify(data).substring(0,500)
+    })
+  })
+  .then(function(res){return res.json();})
+  .then(function(json){
+    if(json.url){window.location.href=json.url;}
+    else throw new Error(json.error||"Could not create payment session");
+  })
+  .catch(function(err){
+    spinner.classList.remove("show");payBtn.disabled=false;
+    var errEl=document.getElementById("payment-err");
+    errEl.textContent="Payment setup failed: "+err.message+". Please try again.";
+    errEl.style.display="block";
+    console.error(err);
+  });
+}
+
+// ── TOGGLE PREVIOUS TEAM ──────────────────────────────
+function togglePrevTeam(val){
+  var wrap = document.getElementById("f-prev-team");
+  var sel  = document.querySelector("[name='previous_team']");
+  if(val === "Yes"){
+    wrap.style.display = "flex";
+  } else {
+    wrap.style.display = "none";
+    sel.value = "";           // reset selection when hidden
+    wrap.classList.remove("invalid");
+  }
+}
+
+// Live clear errors
+document.getElementById("regForm").querySelectorAll("input,select,textarea").forEach(function(el){
+  el.addEventListener("input",function(){var f=el.closest(".field");if(f)f.classList.remove("invalid");});
+});
+// "Agree all" master toggle
+document.getElementById("consent_all").addEventListener("change",function(){
+  var checked=this.checked;
+  for(var i=1;i<=8;i++){document.getElementById("consent_"+i).checked=checked;}
+});
+window.addEventListener("resize",function(){if(document.querySelector("[data-step='3']").classList.contains("active"))resizeCanvas();});
 </script>
 </body>
 </html>
